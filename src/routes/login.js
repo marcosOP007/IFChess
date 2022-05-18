@@ -17,6 +17,12 @@ router.post('/', (req, res, next ) => {
     })
 });
 
+router.patch('/', (req, res, next) => {
+    res.status(200).sed({
+
+    })
+})
+
 
 
 //
