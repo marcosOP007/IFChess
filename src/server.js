@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-
+//teste
 
 app.use('/bscss', express.static('./node_modules/bootstrap/dist/css'));
 app.use('/bsjs', express.static('./node_modules/bootstrap/dist/js'));
