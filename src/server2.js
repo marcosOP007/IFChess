@@ -12,7 +12,7 @@ const pool = require('./dao/conexao');
 
 const crypto = require('crypto');
 
-
+const c = require('./app');
 
 const jwt = require("jsonwebtoken");
 
@@ -78,8 +78,8 @@ ALTER TABLE public.bd_ifchess
 
 function existUser(name){
  
-  pool.query(`SELECT name  FROM bd_ifchess 
-    WHERE name = '${name}'`)
+  pool.query(`SELECT email  FROM bd_ifchess 
+    WHERE email = '${name}'`)
   .then(function(resultado){
     if (resultado.rowCount == 0){
       console.log("user not exist")
@@ -94,8 +94,24 @@ function existUser(name){
  })
     
 }
-existUser('marcos');
+//existUser('marcos');
 
+function validatePassword(email, password){
+  pool.query(`SELECT * FROM bd_ifchess 
+    WHERE email = '${email}' AND password = '${crypto.createHash('sha256').update(password).digest('hex')}'`)
+  .then(function(resultado){
+    if (resultado.rowCount == 0){
+      console.log("user not exist")
+      return false;
+    }          
+    console.log("user exist")
+      return true;
+ })
+ .catch(function(erro){
+     console.log(erro.stack)
+     //res.render('lista');
+ })
+}
 
 
 
@@ -109,8 +125,9 @@ app.post('/create-table-default',function(req, res){
   pool.query(`CREATE TABLE public.bd_ifchess
   (
       name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+      email character varying(50) COLLATE pg_catalog."default" NOT NULL,
       password character varying(64) COLLATE pg_catalog."default" NOT NULL,
-      settings json NOT NULL,
+      settings json,
       CONSTRAINT bd_ifchess_pkey PRIMARY KEY (name)
   )
   
@@ -166,6 +183,16 @@ app.get('/login',function(req, res){
 });
 
 
+app.get('/login2', function(req, res){
+  res.sendFile(__dirname + '/views/login.html')
+})
+
+app.post('/login2', function(req, res){
+  if(validatePassword(req.body.email, req.body.password)){
+  }else{
+
+  }
+})
 
 
 app.post('/logout', function(req, res) {
@@ -182,22 +209,32 @@ app.post('/login', (req,res) => {
   }; 
 */
   const validation_stats = validator.valid_info_resgister(req.body);
-  const userInfo = {req}
 
+ console.log("enviado com sucesso")
+
+  
   if (validation_stats === false){
-    console.log("erro no cadatros");
+    console.log("ERRO NO CADASTRO");
+    return res.status(201).send({
+      mensagem: "erro inesperado tente novamente" 
+    });
+  }else{
 
-    //res.status(401).end();
+    if(existUser(req.body.username)){
+
+    }else{
+      
+      pool.query(`INSERT INTO bd_ifchess VALUES('${req.body.username}', '${req.body.email}', '${crypto.createHash('sha256').update(req.body.password).digest('hex')}')`)
+
+      const token = jwt.sign({userId: 1},SECRET ,{ expiresIn: 300});
+
+      return res.json({ auth: true , token});
+
+    }
+  
     
+      return res.status(401).end();
   }
-
-  if(true){
-    const token = jwt.sign({userId: 1},SECRET ,{ expiresIn: 300});
-    return res.json({ auth: true , token});
-
-  }
-
-  res.status(401).end();
 
     
 })
