@@ -2,9 +2,12 @@ const express = require('express');
 const app = express();
 
 const routerRegister = require('./routes/register');
+const routerLogin = require('./routes/login');
 
 
 app.use('/register', routerRegister);
+app.use('/login', routerLogin);
+
 
 app.use('/bscss', express.static('./node_modules/bootstrap/dist/css'));
 app.use('/bsjs', express.static('./node_modules/bootstrap/dist/js'));

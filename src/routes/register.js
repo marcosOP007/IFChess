@@ -3,9 +3,9 @@ const router = express.Router();
 
 
 router.get('/', (req, res, next ) => {
-    console.log("client conectado");
+    console.log("client conectado ROTA: [REGISTER]");
 
-    res.sendFile('t.html', { root: './src/views' });
+    res.sendFile('register.html', { root: './src/views' });
    // res.sendFile('.../views/t.html')
 
    /*
