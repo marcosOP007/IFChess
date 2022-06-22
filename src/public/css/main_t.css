@@ -59,11 +59,13 @@
     color:#6f7a85;
     opacity:0.9;
     text-decoration:none;
+    transition: 0.5s;
   }
   
   .login-dark form .forgot:hover, .login-dark form .forgot:active {
     opacity:1;
     text-decoration:none;
+    color: aliceblue;
   }
   
   .login-dark form .btn-primary:active {
