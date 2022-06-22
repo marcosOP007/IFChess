@@ -1,4 +1,4 @@
-// https://www.luiztools.com.br/post/autenticacao-json-web-token-jwt-em-nodejs/
+ // https://www.luiztools.com.br/post/autenticacao-json-web-token-jwt-em-nodejs/
 // https://www.youtube.com/watch?v=A-c643zCW7E
 
 /*               Requisição dos modulos          */ 

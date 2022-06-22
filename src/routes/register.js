@@ -4,9 +4,15 @@ const router = express.Router();
 
 router.get('/', (req, res, next ) => {
     console.log("client conectado");
+
+    res.sendFile('t.html', { root: './src/views' });
+   // res.sendFile('.../views/t.html')
+
+   /*
     res.status(200).send({
         mensagem: 'Usando o GET dentro da rota login'
     })
+    */
 });
 
 
