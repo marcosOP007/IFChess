@@ -4,6 +4,15 @@ const router = express.Router();
 
 const pool = require('../dao/conexao');
 
+const crypto = require('crypto');
+const jwt = require("jsonwebtoken");
+const SECRET = 'henmarnel';
+
+router.use(express.json());
+router.use(express.urlencoded({
+    extended: true
+}))
+
 
 
 function existUser(name){
@@ -26,9 +35,9 @@ function existUser(name){
   }
   //existUser('marcos');
   
-  function validatePassword(email, password){
-    pool.query(`SELECT * FROM bd_ifchess 
-      WHERE email = '${email}' AND password = '${crypto.createHash('sha256').update(password).digest('hex')}'`)
+function validatePassword(ident, password){
+    return pool.query(`SELECT * FROM bd_ifchess 
+      WHERE (name = '${ident}'  OR email = '${ident}') AND password = '${crypto.createHash('sha256').update(password).digest('hex')}'`)
     .then(function(resultado){
       if (resultado.rowCount == 0){
         console.log("user not exist")
@@ -74,9 +83,34 @@ if(validatePassword(req.body.email, req.body.password)){
 
 }
  */
+validatePassword(req.body.email, req.body.password).then(function(resp){
+  if(resp){
+
+    jwt.sign({userId: 1}, SECRET)
+
+
+
     res.status(200).send({
-        mensagem: 'Usando o POST dentro da rota login'
+      mensagem: 'Logado Com sucesso',
+  
     })
+  }else{
+    res.status(200).send({
+      mensagem: 'Falha na autenticação',
+  
+    })
+  }
+
+
+
+}).catch(function(erro){
+  res.status(200).send({
+    mensagem: 'Erro no Servidor',
+    erro: erro.stack
+})
+})
+
+    
 }); 
 
 router.patch('/', (req, res, next) => {
